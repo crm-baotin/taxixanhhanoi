@@ -1,0 +1,112 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Taxi Xanh Hà Nội - Đi tỉnh giá rẻ từ 6.000đ/km</title>
+
+<meta name="description" content="Taxi Xanh Hà Nội chuyên xe đi tỉnh, sân bay Nội Bài, đường dài giá rẻ. Xe sạch đẹp, tài xế lịch sự, phục vụ 24/7. Hotline 0829133391">
+<meta name="keywords" content="taxi hà nội, taxi đi tỉnh, taxi nội bài, taxi xanh hà nội, xe đi tỉnh giá rẻ, taxi long biên">
+<meta name="author" content="Taxi Xanh Hà Nội">
+
+<meta name="robots" content="index, follow">
+
+<link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+<!-- ===== FAVICON ===== -->
+<link rel="icon" type="image/x-icon" href="{% static 'assets/images/favicon.ico' %}">
+
+<!-- ===== OPEN GRAPH ===== -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://taxixanhlongbien.io.vn/">
+<meta property="og:title" content="Taxi Xanh Hà Nội - Đi tỉnh giá rẻ từ 6.000đ/km">
+<meta property="og:description" content="Chuyên taxi Hà Nội đi tỉnh, Nội Bài, đường dài giá tốt. Xe sạch đẹp, phục vụ 24/7. Hotline 0829133391">
+<meta property="og:image" content="https://taxixanhlongbien.io.vn/static/assets/images/share.jpg">
+<meta property="og:image:alt" content="Taxi Xanh Hà Nội">
+
+<!-- ===== TWITTER CARD ===== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Taxi Xanh Hà Nội - Đi tỉnh giá rẻ">
+<meta name="twitter:description" content="Taxi Hà Nội đi tỉnh, sân bay Nội Bài, xe sạch đẹp, giá rõ ràng.">
+<meta name="twitter:image" content="https://taxixanhlongbien.io.vn/static/assets/images/share.jpg">
+
+<!-- ===== GOOGLE ANALYTICS ===== -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1TDL99T8H0"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-1TDL99T8H0');
+</script>
+
+<!-- ===== FACEBOOK PIXEL ===== -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];
+t=b.createElement(e);t.async=!0;
+t.src=v;
+s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)
+}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+
+fbq('init', '1969974450230357');
+fbq('track', 'PageView');
+</script>
+
+<noscript>
+<img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1969974450230357&ev=PageView&noscript=1"/>
+</noscript>
+
+<!-- ===== TIKTOK PIXEL ===== -->
+<script>
+!function (w, d, t) {
+w.TiktokAnalyticsObject=t;
+var ttq=w[t]=w[t]||[];
+ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];
+ttq.setAndDefer=function(t,e){
+t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}
+};
+for(var i=0;i<ttq.methods.length;i++){
+ttq.setAndDefer(ttq,ttq.methods[i]);
+}
+ttq.load=function(e){
+var n=document.createElement("script");
+n.async=!0;
+n.src="https://analytics.tiktok.com/i18n/pixel/events.js?sdkid="+e+"&lib="+t;
+var a=document.getElementsByTagName("script")[0];
+a.parentNode.insertBefore(n,a);
+};
+ttq.load('D5BVP9JC77U9GK0PMA30');
+ttq.page();
+}(window, document, 'ttq');
+</script>
+
+<!-- ===== FONT ===== -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+{% include 'includes/header.html' %}
+
+<main>
+{% block content %}{% endblock %}
+</main>
+
+{% include 'includes/footer.html' %}
+
+</body>
+</html>

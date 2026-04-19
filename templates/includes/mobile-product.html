@@ -1,0 +1,67 @@
+<div class="mobile-product">
+
+  <select onchange="if(this.value) window.location.href=this.value">
+
+    <option value="">-- Chọn tuyến xe phổ biến --</option>
+
+    <option value="/" {% if request.path == '/' %}selected{% endif %}>Trang chủ</option>
+
+    <option value="/sanbay-noibai/" {% if request.path == '/sanbay-noibai/' %}selected{% endif %}>
+      Đưa đón sân bay Nội Bài từ 250.000đ
+    </option>
+
+    <option value="/hanoi-halong/" {% if request.path == '/hanoi-halong/' %}selected{% endif %}>
+      Hà Nội - Hạ Long từ 1.100.000đ
+    </option> 
+
+    <option value="/hanoi-haiphong/" {% if request.path == '/hanoi-haiphong/' %}selected{% endif %}>
+      Hà Nội - Hải Phòng từ 800.000đ
+    </option>
+
+    <option value="/hanoi-bacninh/" {% if request.path == '/hanoi-bacninh/' %}selected{% endif %}>
+      Hà Nội - Bắc Ninh từ 300.000đ
+    </option>
+
+    <option value="/hanoi-haiduong/" {% if request.path == '/hanoi-haiduong/' %}selected{% endif %}>
+      Hà Nội - Hải Dương từ 500.000đ
+    </option>
+
+    <option value="/hanoi-ninhbinh/" {% if request.path == '/hanoi-ninhbinh/' %}selected{% endif %}>
+      Hà Nội - Ninh Bình từ 800.000đ
+    </option>
+
+    <option value="/hanoi-thanhhoa/" {% if request.path == '/hanoi-thanhhoa/' %}selected{% endif %}>
+      Hà Nội - Thanh Hóa từ 1.100.000đ
+    </option>
+
+    <option value="/hanoi-namdinh/" {% if request.path == '/hanoi-namdinh/' %}selected{% endif %}>
+      Hà Nội - Nam Định từ 800.000đ
+    </option>
+
+    <option value="/hanoi-hoabinh/" {% if request.path == '/hanoi-hoabinh/' %}selected{% endif %}>
+      Hà Nội - Hòa Bình từ 800.000đ
+    </option>
+
+    <option value="/hanoi-laocai/" {% if request.path == '/hanoi-laocai/' %}selected{% endif %}>
+      Hà Nội - Lào Cai từ 2.000.000đ
+    </option>
+
+    <option value="/hanoi-langson/" {% if request.path == '/hanoi-langson/' %}selected{% endif %}>
+      Hà Nội - Lạng Sơn từ 1.100.000đ
+    </option>
+
+    <option value="/hanoi-bacgiang/" {% if request.path == '/hanoi-bacgiang/' %}selected{% endif %}>
+      Hà Nội - Bắc Giang từ 800.000đ
+    </option>
+
+    <option value="/hanoi-thainguyen/" {% if request.path == '/hanoi-thainguyen/' %}selected{% endif %}>
+      Hà Nội - Thái Nguyên từ 800.000đ
+    </option>
+
+    <option value="/lien-he/" {% if request.path == '/lien-he/' %}selected{% endif %}>
+      Liên hệ đặt xe Phone: 0829133391
+    </option>
+
+  </select>
+
+</div>

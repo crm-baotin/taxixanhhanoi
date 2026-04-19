@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+.form-section{
+  display:none !important;
+}
+</style>
+
+<section style="padding:60px 20px; background:#f5f7fa;">
+  <div class="container">
+
+    <div style="
+      max-width:520px;
+      margin:0 auto;
+      background:#fff;
+      border-radius:18px;
+      padding:35px 25px;
+      text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    ">
+
+      <!-- ẢNH -->
+      <img src="{% static 'assets/images/thank_you.png' %}"
+           style="width:140px; margin-bottom:14px;">
+
+      <!-- TITLE -->
+      <h1 style="
+        color:#1E3A5F;
+        font-size:32px;
+        margin-bottom:10px;
+        font-weight:800;
+      ">
+        ⏳ Bạn vừa đặt xe gần đây
+      </h1>
+
+      <!-- SUB -->
+      <p style="
+        font-size:16px;
+        color:#555;
+        line-height:1.7;
+        margin-bottom:22px;
+      ">
+        Hệ thống đã nhận yêu cầu của bạn trước đó.<br>
+        Tài xế hoặc điều phối đang liên hệ trong <b>5 phút</b>.
+      </p>
+
+      <!-- BOX -->
+      <div style="
+        background:#f1f5f9;
+        padding:18px;
+        border-radius:12px;
+        text-align:left;
+        color:#00a884;
+        font-size:15px;
+        margin-bottom:22px;
+        line-height:1.9;
+      ">
+
+        <div>✔️ Chúng tôi đang ưu tiên xử lý yêu cầu của bạn</div>
+        <div>✔️ Xe phục vụ nội thành, sân bay và đi tỉnh</div>
+        <div>✔️ Hoạt động 24/7 kể cả sáng sớm và đêm muộn</div>
+
+      </div>
+
+      <!-- CTA -->
+      <p style="font-size:15px; margin-bottom:10px;">
+        📞 Nếu cần xe gấp hoặc muốn xác nhận nhanh:<br>
+        Gọi ngay hoặc liên hệ Zalo
+      </p>
+
+      <a href="tel:0829133391" style="
+        display:inline-block;
+        margin-bottom:22px;
+        font-size:28px;
+        font-weight:800;
+        color:#e53935;
+        text-decoration:none;
+      ">
+        0829 133 391
+      </a>
+
+      <br>
+
+      <!-- BUTTON -->
+      <a href="/" style="
+        display:inline-block;
+        padding:12px 28px;
+        background:#1E3A5F;
+        color:#fff;
+        border-radius:999px;
+        text-decoration:none;
+        font-weight:700;
+        font-size:18px;
+      ">
+        Quay lại trang chủ
+      </a>
+
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

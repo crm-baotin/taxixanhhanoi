@@ -1,0 +1,74 @@
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from datetime import timedelta
+from .models import Lead
+from .telegram import send_telegram
+
+
+def submit(request):
+    if request.method == 'POST':
+
+        full_name = request.POST.get('full_name')
+        phone = request.POST.get('phone')
+
+        # ===== CHECK RỖNG =====
+        if not phone:
+            return redirect('/')
+
+        # ===== CHỐNG SPAM =====
+        time_limit = timezone.now() - timedelta(hours=24)
+
+        count = Lead.objects.filter(
+            phone=phone,
+            created_at__gte=time_limit
+        ).count()
+
+        if count >= 2:
+             return redirect('/limit/')
+
+
+        # ===== LƯU LEAD =====
+        Lead.objects.create(
+            full_name=full_name,
+            phone=phone,
+        )
+
+        # ===== GỬI TELE =====
+        now_time = timezone.localtime().strftime("%H:%M – %d/%m/%Y")
+
+        msg = f"""
+📥 <b>Taxi Taxi – Bảo Tín</b>
+
+👤 Họ tên: {full_name}
+📞 SĐT: {phone}
+
+⏰ Thời gian: {now_time}
+🌐 Nguồn: Bảo Tín VF
+        """
+
+        try:
+            send_telegram(msg.strip())
+        except:
+            pass
+
+        return redirect('/success/')
+
+    return redirect('/')
+
+def limit(request):
+    return render(request, 'pages/limit.html')
+    
+def home(request):
+    return render(request, 'pages/index.html')
+
+
+def page(request, slug):
+    return render(request, f'pages/{slug}.html')
+
+from django.http import HttpResponse
+
+def ping(request):
+    return HttpResponse("ok")
+
+def success(request):
+    return render(request, 'pages/success.html')
