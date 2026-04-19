@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-zx%jdq7@icb&e8o9vw0)+rkloa1j0r*68k$vwk@woed9(rmoxy
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*',
+ALLOWED_HOSTS = [
     'taxixanhlongbien.io.vn',
     'www.taxixanhlongbien.io.vn',
     'taxixanhlongbien.onrender.com',
