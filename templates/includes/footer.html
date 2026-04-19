@@ -7,7 +7,7 @@
       <h3 class="form-title">Nhận báo giá và đặt xe</h3>
 
       <p class="form-highlight">
-        Gọi Hotline – Báo điểm đến – Xác nhận giá – Xe đến đón<br>
+        Gọi ngay • Báo điểm đến • Có giá ngay<br>
       </p>
 
       <form method="POST" action="/submit/">
@@ -320,6 +320,33 @@ document.querySelectorAll(".tab").forEach(btn => {
 
 <a href="tel:0829133391" class="call-fixed">
   <img src="{% static 'assets/images/logocall.png' %}">
+</a>
+
+<a href="#banggiacuoc"
+class="price-glow-btn"
+style="
+position:fixed;
+left:max(20px, calc((100vw - 1400px)/2 + 20px));
+bottom:20px;
+z-index:999999;
+width:140px;
+height:50px;
+background:#ffffff;
+color:#00C2A8;
+border-radius:999px;
+box-shadow:0 6px 18px rgba(0,0,0,.18);
+text-decoration:none;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:14px;
+font-weight:800;
+white-space:nowrap;
+overflow:hidden;
+animation:btnPulse 1s infinite;
+transform-origin:center;
+">
+Tính giá ngay
 </a>
 
 

@@ -2289,8 +2289,8 @@ html {
 
 .fare-title{
   color:#00C2A8;
-  font-size:34px;
-  font-weight:800;
+  font-size:26px;
+  font-weight:80;
   margin-bottom:10px;
   line-height:1.2;
 }
@@ -2390,6 +2390,71 @@ html {
 }
 
 
+/* ===== KHỐI TÍNH CƯỚC XE ===== */
+.fare-section{
+  padding:35px 0 45px;
+}
+
+.fare-box{
+  max-width:430px;
+  margin:0 auto;
+  background:#fff;
+  border-radius:20px;
+  padding:28px 22px;
+  box-shadow:0 14px 28px rgba(0,0,0,.08);
+  text-align:center;
+}
+
+.fare-title{
+  color:#00C2A8;
+  font-size:26px;
+  font-weight:800;
+  margin-bottom:10px;
+  line-height:1.25;
+}
+
+.fare-sub{
+  color:#ff0000;
+  font-size:15px;
+  margin-bottom:18px;
+  line-height:1.5;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+  .fare-section{
+    padding:25px 0 35px;
+  }
+
+  .fare-box{
+    max-width:100%;
+    padding:22px 16px;
+    border-radius:18px;
+  }
+
+  .fare-title{
+    font-size:22px !important;
+    line-height:1.3;
+    margin-bottom:10px;
+    padding:0 8px;
+  }
+
+  .fare-sub{
+    font-size:14px;
+    margin-bottom:14px;
+  }
+
+  .fare-result{
+    font-size:17px;
+  }
+
+  .fare-table{
+    font-size:13px;
+  }
+
+}
+
 
 /* CHỮ GIỚI THIỆU DƯỚI KHỐI TÍNH GIÁ */
 .fare-content{
@@ -2408,7 +2473,7 @@ html {
 
 .fare-content p{
   font-size:14px;
-  color:#444;
+  color:#ff0000;
   line-height:1.7;
   margin-bottom:12px;
 }
@@ -2660,4 +2725,233 @@ html {
     font-size:13px;
   }
 
+}
+
+
+.price-glow-btn{
+    position:fixed;
+    left:max(20px, calc((100vw - 1400px)/2 + 20px));
+    bottom:20px;
+    z-index:99999;
+
+    width:140px;
+    height:50px;
+
+    background:linear-gradient(135deg,#ffffff,#f6fffc);
+    color:#00C2A8;
+
+    border-radius:999px;
+    box-shadow:0 8px 22px rgba(0,0,0,.18);
+
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:14px;
+    font-weight:800;
+    white-space:nowrap;
+
+    overflow:hidden;
+    isolation:isolate;
+    transition:.25s;
+}
+
+.price-glow-btn:hover{
+    transform:translateY(-2px);
+}
+
+/* ánh sáng quét */
+.price-glow-btn::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-85%;
+    width:35%;
+    height:100%;
+    background:linear-gradient(
+        120deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.35) 35%,
+        rgba(255,255,255,.95) 50%,
+        rgba(255,255,255,.35) 65%,
+        rgba(255,255,255,0) 100%
+    );
+    transform:skewX(-25deg);
+    animation:shineSweep 3.2s infinite;
+    z-index:-1;
+}
+
+/* bóng trong */
+.price-glow-btn::after{
+    content:"";
+    position:absolute;
+    inset:1px;
+    border-radius:999px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.95);
+    pointer-events:none;
+}
+
+@keyframes shineSweep{
+    0%{ left:-85%; }
+    100%{ left:145%; }
+}
+
+@media(max-width:768px){
+   .price-glow-btn{
+      left:10px;
+      bottom:20px;
+      width:110px;
+      height:42px;
+      font-size:12px;
+   }
+}
+
+
+/* ===== FIX KHỐI TÍNH CƯỚC ===== */
+
+.fare-title{
+    font-size:22px !important;
+    font-weight:800 !important;
+    line-height:1.25 !important;
+    color:#00C2A8 !important;
+}
+
+.fare-sub{
+    color:#ff0000 !important;
+    font-size:15px !important;
+}
+
+@media(max-width:768px){
+
+  .fare-box{
+      padding:22px 16px !important;
+      border-radius:18px !important;
+  }
+
+  .fare-title{
+      font-size:22px !important;
+      line-height:1.3 !important;
+      padding:0 8px !important;
+      margin-bottom:10px !important;
+  }
+
+  .fare-sub{
+      font-size:14px !important;
+      margin-bottom:14px !important;
+  }
+
+}
+
+@keyframes priceShake{
+  0%,100%{transform:rotate(0deg);}
+  10%{transform:rotate(10deg);}
+  20%{transform:rotate(-10deg);}
+  30%{transform:rotate(8deg);}
+  40%{transform:rotate(-8deg);}
+  50%{transform:rotate(5deg);}
+  60%{transform:rotate(-5deg);}
+  70%{transform:rotate(3deg);}
+  80%{transform:rotate(-3deg);}
+  90%{transform:rotate(1deg);}
+}
+
+.price-glow-btn{
+    animation:pricePulse 1.1s infinite !important;
+}
+
+@keyframes pricePulse{
+  0%,100%{
+    transform:scale(1);
+    box-shadow:0 6px 18px rgba(0,0,0,.18);
+  }
+
+  50%{
+    transform:scale(1.08);
+    box-shadow:0 10px 24px rgba(0,194,168,.38);
+  }
+}
+
+
+/* ===== NÚT TÍNH GIÁ CƯỚC RUNG THẬT ===== */
+
+.price-glow-btn,
+.price-glow-btn:hover{
+    transform:none !important;
+}
+
+.price-glow-btn{
+    animation:priceBounce 1.15s infinite !important;
+    will-change:transform, box-shadow;
+}
+
+@keyframes priceBounce{
+  0%,100%{
+    transform:translateY(0) scale(1);
+    box-shadow:0 8px 22px rgba(0,0,0,.18);
+  }
+
+  20%{
+    transform:translateY(-4px) scale(1.03);
+  }
+
+  45%{
+    transform:translateY(0) scale(1);
+  }
+
+  60%{
+    transform:translateY(-2px) scale(1.02);
+    box-shadow:0 12px 28px rgba(0,194,168,.35);
+  }
+
+  80%{
+    transform:translateY(0) scale(1);
+  }
+}
+
+/* NÚT TÍNH GIÁ CƯỚC RUNG */
+
+.price-glow-btn{
+    animation:btnShake 1.2s infinite !important;
+    transform-origin:center center !important;
+}
+
+.price-glow-btn:hover{
+    animation:btnShake 1.2s infinite !important;
+}
+
+@keyframes btnShake{
+    0%,100%{ transform:rotate(0deg); }
+    10%{ transform:rotate(8deg); }
+    20%{ transform:rotate(-8deg); }
+    30%{ transform:rotate(6deg); }
+    40%{ transform:rotate(-6deg); }
+    50%{ transform:rotate(4deg); }
+    60%{ transform:rotate(-4deg); }
+    70%{ transform:rotate(2deg); }
+    80%{ transform:rotate(-2deg); }
+    90%{ transform:rotate(1deg); }
+}
+
+@keyframes btnPulse{
+  0%,100%{
+    transform:scale(1);
+    box-shadow:0 6px 18px rgba(0,0,0,.18);
+  }
+
+  50%{
+    transform:scale(1.08);
+    box-shadow:0 10px 24px rgba(0,194,168,.38);
+  }
+}
+
+
+.fare-sub{
+    color:#ff0000 !important;
+    font-weight:600;
+}
+
+.fare-sub{
+   color:#ff0000 !important;
+   font-weight:600;
 }
