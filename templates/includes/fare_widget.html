@@ -193,40 +193,110 @@ border-radius:0 !important;
 }
 
 }
-/* khi nhảy tới anchor chừa khoảng header */
+/* ===== DESKTOP + MOBILE CHUNG ===== */
 #banggiacuoc{
-scroll-margin-top:90px;
+width:100% !important;
+margin:0 !important;
+padding:0 !important;   /* bỏ khoảng hở trên */
+background:transparent !important;
 }
 
+/* khối chính */
+#banggiacuoc .wrap{
+width:100% !important;
+max-width:100% !important;   /* bỏ co ở trang phụ */
+margin:0 !important;
+border-radius:22px !important;
+overflow:hidden;
+background:#fff;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+/* đầu khối */
+#banggiacuoc .top{
+padding:14px 14px 10px !important;
+}
+
+/* tiêu đề */
+#banggiacuoc h2{
+margin:0 0 10px !important;   /* bỏ hở trên */
+padding:0 !important;
+font-size:22px !important;
+line-height:1.15 !important;
+text-align:center;
+color:#14b8a6;
+}
+
+/* desktop giới hạn đẹp */
+@media(min-width:992px){
+#banggiacuoc .wrap{
+max-width:860px !important;
+margin:auto !important;
+}
+}
+
+/* mobile */
 @media(max-width:768px){
+
 #banggiacuoc{
-scroll-margin-top:78px;
-}
+padding:0 6px !important;
 }
 
+#banggiacuoc .wrap{
+max-width:100% !important;
+margin:0 !important;
+border-radius:18px !important;
+}
+
+#banggiacuoc .top{
+padding:12px 12px 8px !important;
+}
+
+#banggiacuoc h2{
+font-size:19px !important;
+margin:0 0 8px !important;
+line-height:1.12 !important;
+}
+
+}
 </style>
 
+<!-- FIX CUỐI -->
+<!-- HẠ XUỐNG MỘT CHÚT ĐỂ HERO KHÔNG CHE TIÊU ĐỀ -->
+
 <script>
-/* nếu nút đang dùng href="#banggiacuoc" thì thêm JS này cuối file */
 
 document.querySelectorAll('a[href="#banggiacuoc"]').forEach(function(btn){
 
-btn.addEventListener("click",function(e){
+btn.addEventListener("click", function(e){
 
 e.preventDefault();
 
-document.getElementById("banggiacuoc")
-.scrollIntoView({
-behavior:"smooth",
-block:"start"
+const box = document.getElementById("banggiacuoc");
+if(!box) return;
+
+/* tụt xuống thêm 42px */
+const top =
+box.getBoundingClientRect().top +
+window.pageYOffset - 42;
+
+window.scrollTo({
+top: top,
+behavior: "smooth"
 });
 
 });
 
 });
+
 </script>
 
+<style>
+#banggiacuoc{
+scroll-margin-top:42px !important;
+}
 </style>
+
 
 <section id="banggiacuoc">
 <div class="wrap">
@@ -288,6 +358,8 @@ Trên 100km : <b>6.000đ/km</b>
 <link rel="stylesheet" href="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.css">
 <script src="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mapbox/polyline@1.1.1/src/polyline.js"></script>
+
+
 
 <script>
 (function(){

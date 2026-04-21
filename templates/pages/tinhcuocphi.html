@@ -21,9 +21,11 @@
 <section class="province-price">
   <div class="container">
 
- <!-- templates/tools/gps_meter.html -->
-<!-- FULL FILE CHUẨN - GIỮ NGUYÊN LOGIC GPS -->
-<!-- CHỈ TINH GỌN MOBILE + MÀN HÌNH KHÔNG TẮT -->
+<!-- templates/tools/gps_meter.html -->
+<!-- FULL FILE ĐÃ SỬA GIAO DIỆN THEO YÊU CẦU -->
+<!-- KM + THỜI GIAN CÙNG 1 HÀNG -->
+<!-- THÀNH TIỀN BÊN DƯỚI -->
+<!-- GIỮ NGUYÊN TOÀN BỘ JS GPS -->
 
 <style>
 #gpsTool *{
@@ -50,7 +52,6 @@ line-height:1.2;
 color:#14b8a6
 }
 
-/* MAP CO GỌN */
 #gpsMap{
 width:100%;
 height:270px;
@@ -77,31 +78,16 @@ cursor:pointer;
 box-shadow:0 6px 14px rgba(0,0,0,.08)
 }
 
-#btnStart{
-background:linear-gradient(135deg,#16a34a,#15803d);
-color:#fff
-}
-
-#btnPause{
-background:linear-gradient(135deg,#f59e0b,#d97706);
-color:#fff
-}
-
-#btnStop{
-background:linear-gradient(135deg,#ef4444,#dc2626);
-color:#fff
-}
-
-#btnReset{
-background:#eef2f7;
-color:#111827
-}
+#btnStart{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff}
+#btnPause{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+#btnStop{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+#btnReset{background:#eef2f7;color:#111827}
 
 .card{
-margin-top:8px;
 padding:10px 12px;
 border-radius:16px;
-background:#f8fafc
+background:#f8fafc;
+margin-top:8px
 }
 
 .label{
@@ -112,14 +98,41 @@ font-weight:700
 }
 
 .big{
-font-size:28px;
+font-size:26px;
 font-weight:900;
 line-height:1
 }
 
-.green{color:#16a34a}
-.blue{color:#0ea5e9}
-.red{color:#ef4444}
+/* hàng km + time */
+.stat-row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+margin-top:8px
+}
+
+/* màu */
+.km-box{
+background:#eff6ff
+}
+.km-box .big{
+color:#2563eb
+}
+
+.time-box{
+background:#fef9c3
+}
+.time-box .big{
+color:#ca8a04
+}
+
+.money-box{
+background:#f0fdf4
+}
+.money-box .big{
+color:#16a34a;
+font-size:30px
+}
 
 #statusText{
 font-size:13px;
@@ -143,21 +156,28 @@ font-weight:700
 <button id="btnReset">LÀM MỚI</button>
 </div>
 
-<div class="card">
-<div class="label">Quãng đường thực tế</div>
-<div class="big green" id="kmText">0.00 km</div>
+<!-- HÀNG 1 -->
+<div class="stat-row">
+
+<div class="card km-box">
+<div class="label">Quãng đường</div>
+<div class="big" id="kmText">0.00 km</div>
 </div>
 
-<div class="card">
+<div class="card time-box">
 <div class="label">Thời gian</div>
-<div class="big blue" id="timeText">00:00</div>
+<div class="big" id="timeText">00:00</div>
 </div>
 
-<div class="card">
+</div>
+
+<!-- HÀNG 2 -->
+<div class="card money-box">
 <div class="label">Thành tiền</div>
-<div class="big red" id="moneyText">0đ</div>
+<div class="big" id="moneyText">0đ</div>
 </div>
 
+<!-- HÀNG 3 -->
 <div class="card">
 <div class="label">Trạng thái</div>
 <div id="statusText">Chưa bắt đầu</div>
@@ -167,6 +187,8 @@ font-weight:700
 
 <link rel="stylesheet" href="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.css">
 <script src="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.js"></script>
+
+<!-- GIỮ NGUYÊN TOÀN BỘ SCRIPT GPS CŨ CỦA ÔNG BÊN DƯỚI -->
 
 <script>
 (function(){
