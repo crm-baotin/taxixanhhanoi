@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" href="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.css">
+<script src="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.js"></script>
+</head>
+<body>
+<div id="map" style="height:500px"></div>
+
+<script>
+goongjs.accessToken="6aIBLxt2RJZasvfS1JWXgc1uvgARinQczQluqC07";
+
+new goongjs.Map({
+container:"map",
+style:"https://tiles.goong.io/assets/goong_map_web.json?api_key=6aIBLxt2RJZasvfS1JWXgc1uvgARinQczQluqC07",
+center:[105.8342,21.0278],
+zoom:12
+});
+</script>
+</body>
+</html>

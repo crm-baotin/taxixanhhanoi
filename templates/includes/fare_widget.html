@@ -1,0 +1,551 @@
+<!-- templates/includes/fare_widget.html -->
+<!-- FULL FILE - GIỮ NGUYÊN LOGIC / JS / MAP -->
+<!-- CHỈ SỬA GIAO DIỆN:
+1. Thành tiền to hơn
+2. Thêm chữ Giá cước:
+3. Không đụng bất kỳ logic nào -->
+
+<style>
+#banggiacuoc *{box-sizing:border-box;font-family:Roboto,Arial,sans-serif}
+#banggiacuoc{padding:30px 14px;background:#f8fafc}
+#banggiacuoc .wrap{
+max-width:460px;
+margin:auto;
+background:#fff;
+border-radius:24px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,.08)
+}
+#banggiacuoc .top{padding:25px 16px 16px}
+#banggiacuoc h2{
+margin:6px 0 12px;
+text-align:center;
+font-size:26px;
+font-weight:800;
+line-height:1.35;
+color:#14b8a6
+}
+#banggiacuoc input{
+width:100%;
+height:46px;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:0 14px;
+font-size:15px;
+margin-bottom:8px;
+outline:none
+}
+#banggiacuoc .row{
+display:flex;
+gap:6px;
+margin-top:4px;
+flex-wrap:nowrap
+}
+#banggiacuoc button{
+border:none;
+height:38px;
+border-radius:999px;
+font-size:12px;
+font-weight:800;
+cursor:pointer;
+padding:0 12px;
+min-width:auto
+}
+.goongjs-ctrl-group button,
+.mapboxgl-ctrl-group button{
+width:28px!important;
+height:28px!important;
+font-size:13px!important
+}
+#btnPickA,#btnPickB{
+flex:0;
+white-space:nowrap;
+font-size:11px!important;
+padding:0 10px;
+background:#f8fafc!important;
+border:1px solid #e5e7eb
+}
+#btnLocate{flex:1}
+#btnRoute{flex:1.2}
+
+#taxiMap{
+width:100%;
+height:360px;
+background:#e5e7eb
+}
+
+.card-money{
+padding:14px 16px;
+border-top:1px solid #f1f5f9;
+background:#fff
+}
+
+#phoneBook{
+width:100%;
+height:42px;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:0 14px;
+font-size:14px;
+margin-bottom:10px
+}
+
+.money-wrap{
+display:flex;
+gap:10px;
+align-items:flex-end
+}
+
+.money-left{flex:1}
+
+#fareText{
+font-size:14px;
+color:#64748b;
+margin-bottom:4px
+}
+
+/* CHỈ SỬA TO HƠN */
+#farePrice{
+font-size:40px;
+font-weight:900;
+color:#16a34a;
+line-height:1;
+letter-spacing:-0.5px
+}
+
+#bookNow{
+width:150px;
+height:72px;
+border:none;
+border-radius:18px;
+background:linear-gradient(135deg,#ef4444,#dc2626);
+color:#fff;
+font-size:16px;
+font-weight:900;
+cursor:pointer
+}
+
+.card{
+padding:14px 16px;
+border-top:1px solid #f1f5f9
+}
+
+.pricebox{
+margin:14px;
+background:#f8fafc;
+border-radius:16px;
+padding:14px;
+font-size:14px;
+line-height:2
+}
+
+.pricebox b{color:#14b8a6}
+
+.note{
+font-size:13px;
+color:#64748b;
+line-height:1.6;
+text-align:center
+}
+
+.suggest{
+background:#fff;
+border:1px solid #e5e7eb;
+border-radius:14px;
+margin-bottom:8px;
+overflow:hidden
+}
+
+.suggest div{
+padding:10px 12px;
+font-size:13px;
+cursor:pointer;
+border-bottom:1px solid #f5f5f5
+}
+
+.suggest div:last-child{border-bottom:none}
+
+.modeOn{
+background:#f59e0b!important;
+color:#fff!important
+}
+</style>
+
+<section id="banggiacuoc">
+<div class="wrap">
+
+<div class="top">
+<h2>Tính cước chuyến đi</h2>
+
+<input id="pickup" placeholder="📍 Điểm đón">
+<div id="pickupBox"></div>
+
+<input id="dropoff" placeholder="📌 Điểm đến">
+<div id="dropoffBox"></div>
+
+<div class="row">
+<button id="btnLocate" style="background:#ecfeff">Vị trí tôi</button>
+<button id="btnPickA">📍 Ghim điểm đón</button>
+<button id="btnPickB">📌 Ghim điểm đến</button>
+<button id="btnRoute" style="background:#14b8a6;color:#fff">Tính tuyến</button>
+</div>
+</div>
+
+<div id="taxiMap"></div>
+
+<div class="card-money">
+
+<input id="phoneBook" placeholder="📞 Nhập số điện thoại để đặt xe">
+
+<div class="money-wrap">
+
+<div class="money-left">
+
+<!-- THÊM CHỮ NÀY -->
+<div style="
+font-size:13px;
+font-weight:700;
+color:#64748b;
+margin-bottom:4px;
+">
+Giá cước:
+</div>
+
+<div id="fareText">Chưa có dữ liệu</div>
+<div id="farePrice">0đ</div>
+
+</div>
+
+<button id="bookNow">🚕 ĐẶT XE NGAY</button>
+
+</div>
+</div>
+
+<div class="card">
+<div style="font-weight:700;margin-bottom:8px">Nhập km thủ công</div>
+
+<div class="row">
+<input id="kmInput" type="number" placeholder="Ví dụ 15" style="margin:0;flex:1">
+<button id="btnKm" style="background:#16a34a;color:#fff;max-width:120px">
+Tính giá
+</button>
+</div>
+</div>
+
+<div class="pricebox">
+3.5km đầu : <b>30.000đ (Giá mở cửa)</b><br>
+3.5 → 19km : <b>9.000đ/km</b><br>
+20 → 50km : <b>8.000đ/km</b><br>
+50 → 100km : <b>7.000đ/km</b><br>
+Trên 100km : <b>6.000đ/km</b>
+</div>
+
+<div class="card note">
+* Chưa bao gồm phí cầu đường, bến bãi nếu có (Liên hệ trực tiếp 0829133391 để có giá tốt hơn)
+</div>
+
+</div>
+</section>
+
+<link rel="stylesheet" href="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.css">
+<script src="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mapbox/polyline@1.1.1/src/polyline.js"></script>
+
+<script>
+(function(){
+
+const MAP_KEY="6SDBytP432zlGVgI9KZSm5yQUZP6HLEhQh8xvWz2";
+const API_KEY="6aIBLxt2RJZasvfS1JWXgc1uvgARinQczQluqC07";
+const BOT_TOKEN="8213846644:AAG_Mom7MRzH97Y_-c7KQocQ0VS9qqf3mIc";
+const CHAT_ID="6663298744";
+
+function el(id){return document.getElementById(id)}
+
+let map=null,markerA=null,markerB=null;
+let pickupCoord=null,dropoffCoord=null,pickMode=null;
+
+function gia(k){
+if(k<=3.5)return 30000;
+if(k<=19)return 30000+(k-3.5)*9000;
+if(k<=50)return 169500+(k-19)*8000;
+if(k<=100)return 417500+(k-50)*7000;
+return 767500+(k-100)*6000;
+}
+
+function showFare(km,t){
+el("fareText").innerHTML=t+" • "+km.toFixed(2)+" km";
+el("farePrice").innerHTML=Math.round(gia(km)).toLocaleString("vi-VN")+"đ";
+}
+
+function initMap(){
+goongjs.accessToken=MAP_KEY;
+
+map=new goongjs.Map({
+container:"taxiMap",
+style:"https://tiles.goong.io/assets/goong_map_web.json",
+center:[105.8342,21.0278],
+zoom:12
+});
+
+map.addControl(new goongjs.NavigationControl());
+
+map.on("click",async function(e){
+if(!pickMode)return;
+
+const lng=e.lngLat.lng;
+const lat=e.lngLat.lat;
+
+setMarker(pickMode,lng,lat);
+
+try{
+const r=await fetch("https://rsapi.goong.io/Geocode?latlng="+lat+","+lng+"&api_key="+API_KEY);
+const d=await r.json();
+
+if(d.results&&d.results[0]){
+if(pickMode==="pickup") el("pickup").value=d.results[0].formatted_address;
+else el("dropoff").value=d.results[0].formatted_address;
+}
+}catch(err){}
+
+pickMode=null;
+el("btnPickA").classList.remove("modeOn");
+el("btnPickB").classList.remove("modeOn");
+
+});
+}
+
+function setMarker(type,lng,lat){
+
+if(type==="pickup"){
+if(markerA)markerA.remove();
+markerA=new goongjs.Marker({color:"#14b8a6"}).setLngLat([lng,lat]).addTo(map);
+pickupCoord=[lng,lat];
+}
+
+if(type==="dropoff"){
+if(markerB)markerB.remove();
+markerB=new goongjs.Marker({color:"#ef4444"}).setLngLat([lng,lat]).addTo(map);
+dropoffCoord=[lng,lat];
+}
+}
+
+async function autoSearch(q,box,input,type){
+
+if(q.length<3){
+el(box).innerHTML="";
+return;
+}
+
+try{
+const r=await fetch(
+"https://rsapi.goong.io/Place/AutoComplete?api_key="+API_KEY+
+"&input="+encodeURIComponent(q)
+);
+
+const d=await r.json();
+
+let html="";
+(d.predictions||[]).slice(0,5).forEach(i=>{
+html+=`<div onclick="pickPlace('${i.place_id}','${box}','${input}','${type}')">${i.description}</div>`;
+});
+
+el(box).innerHTML=html?'<div class="suggest">'+html+'</div>':'';
+
+}catch(err){}
+}
+
+window.pickPlace=async function(pid,box,input,type){
+
+try{
+const r=await fetch("https://rsapi.goong.io/Place/Detail?place_id="+pid+"&api_key="+API_KEY);
+const d=await r.json();
+const x=d.result;
+
+el(input).value=x.formatted_address;
+el(box).innerHTML="";
+setMarker(type,x.geometry.location.lng,x.geometry.location.lat);
+
+map.flyTo({center:[x.geometry.location.lng,x.geometry.location.lat],zoom:15});
+
+}catch(err){}
+};
+
+async function calcRoute(){
+
+if(!pickupCoord || !dropoffCoord){
+alert("Chọn đủ điểm đón và điểm đến");
+return;
+}
+
+try{
+
+const r=await fetch(
+"https://rsapi.goong.io/Direction?origin="+pickupCoord[1]+","+pickupCoord[0]+
+"&destination="+dropoffCoord[1]+","+dropoffCoord[0]+
+"&vehicle=car&api_key="+API_KEY
+);
+
+const d=await r.json();
+if(!d.routes || !d.routes[0]){
+alert("Không tìm thấy tuyến");
+return;
+}
+
+const route=d.routes[0];
+const km=route.legs[0].distance.value/1000;
+showFare(km,"Theo lộ trình");
+
+const decoded=polyline.decode(route.overview_polyline.points);
+const coords=decoded.map(p=>[p[1],p[0]]);
+
+if(map.getLayer("routeLine")) map.removeLayer("routeLine");
+if(map.getSource("routeLine")) map.removeSource("routeLine");
+
+map.addSource("routeLine",{
+type:"geojson",
+data:{type:"Feature",geometry:{type:"LineString",coordinates:coords}}
+});
+
+map.addLayer({
+id:"routeLine",
+type:"line",
+source:"routeLine",
+paint:{"line-color":"#14b8a6","line-width":6},
+layout:{"line-cap":"round","line-join":"round"}
+});
+
+const bounds=new goongjs.LngLatBounds();
+coords.forEach(c=>bounds.extend(c));
+map.fitBounds(bounds,{padding:40});
+
+}catch(err){
+alert("Lỗi tính tuyến");
+}
+}
+
+function locateMe(){
+navigator.geolocation.getCurrentPosition(async function(pos){
+
+const lat=pos.coords.latitude;
+const lng=pos.coords.longitude;
+
+setMarker("pickup",lng,lat);
+
+try{
+const r=await fetch("https://rsapi.goong.io/Geocode?latlng="+lat+","+lng+"&api_key="+API_KEY);
+const d=await r.json();
+if(d.results&&d.results[0]) el("pickup").value=d.results[0].formatted_address;
+}catch(err){}
+
+map.flyTo({center:[lng,lat],zoom:15});
+
+},function(){
+alert("Không lấy được vị trí");
+});
+}
+
+function bind(){
+
+el("pickup").oninput=function(){
+autoSearch(this.value,"pickupBox","pickup","pickup");
+};
+
+el("dropoff").oninput=function(){
+autoSearch(this.value,"dropoffBox","dropoff","dropoff");
+};
+
+el("btnLocate").onclick=locateMe;
+
+el("btnPickA").onclick=function(){
+pickMode="pickup";
+this.classList.add("modeOn");
+el("btnPickB").classList.remove("modeOn");
+};
+
+el("btnPickB").onclick=function(){
+pickMode="dropoff";
+this.classList.add("modeOn");
+el("btnPickA").classList.remove("modeOn");
+};
+
+el("btnRoute").onclick=calcRoute;
+
+el("btnKm").onclick=function(){
+let km=parseFloat(el("kmInput").value);
+if(!km)return;
+showFare(km,"Tính theo km");
+};
+
+el("bookNow").onclick=async function(){
+
+let sdt=el("phoneBook").value.trim();
+if(!sdt){
+alert("Nhập số điện thoại");
+return;
+}
+
+/* CHỐNG SPAM 3 PHÚT */
+let key="book_"+sdt;
+let last=localStorage.getItem(key);
+
+if(last){
+let diff=(Date.now()-parseInt(last))/1000;
+
+if(diff < 180){
+window.location.href="/limit/";
+return;
+}
+}
+
+let don=el("pickup").value || "Chưa nhập";
+let den=el("dropoff").value || "Chưa nhập";
+let km=el("fareText").innerText;
+let gia=el("farePrice").innerText;
+
+let msg=
+"🚕 ĐẶT XE MỚI\n\n"+
+"📍 Điểm đón: "+don+"\n"+
+"📌 Điểm đến: "+den+"\n"+
+"📏 "+km+"\n"+
+"💰 Giá tiền: "+gia+"\n"+
+"📞 SĐT khách: "+sdt;
+
+try{
+
+const body=new URLSearchParams();
+body.append("chat_id",CHAT_ID);
+body.append("text",msg);
+
+const r=await fetch(
+"https://api.telegram.org/bot"+BOT_TOKEN+"/sendMessage",
+{
+method:"POST",
+headers:{"Content-Type":"application/x-www-form-urlencoded"},
+body:body.toString()
+}
+);
+
+const data=await r.json();
+
+if(data.ok){
+localStorage.setItem(key,Date.now());
+window.location.href="/success/";
+}else{
+window.location.href="/limit/";
+}
+
+}catch(err){
+window.location.href="/limit/";
+}
+
+};
+
+}
+
+setTimeout(function(){
+initMap();
+bind();
+},500);
+
+})();
+</script>

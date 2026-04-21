@@ -196,95 +196,8 @@
 </section>
 
 
-<!-- ===== CÔNG CỤ TÍNH CƯỚC XE HOÀN CHỈNH ===== -->
-<section id="banggiacuoc" class="fare-section">
-  <div class="container">
 
-    <div class="fare-box">
-
-      <h1 class="fare-title">Tính giá cước xe đi tỉnh</h1>
-
-      <p class="fare-sub">
-        Nhập số Km để ước tính chi phí nhanh chóng
-      </p>
-
-      <input type="number" id="kmInput" placeholder="Nhập số Km">
-
-      <button onclick="tinhCuoc()">Tính giá ngay</button>
-
-      <div class="fare-result" id="fareResult">
-        Giá tạm tính
-      </div>
-
-      <div class="fare-table">
-        <div>0 → 3.5km : <b>30.000đ (Giá mở cửa)</b></div>
-        <div>3.5 → 19km : <b>9.000đ/km</b></div>
-        <div>20 → 50km : <b>8.000đ/km</b></div>
-        <div>50 → 100km : <b>7.000đ/km</b></div>
-        <div>Trên 100km : <b>6.000đ/km</b></div>
-      </div>
-
-      <div class="fare-note">
-        * Chưa bao gồm phí cầu đường, bến bãi nếu có (Liên hệ trực tiếp 0829133391 để có giá tốt hơn)
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-<script>
-function tinhCuoc(){
-
-  let km = parseFloat(document.getElementById("kmInput").value);
-  let tien = 0;
-
-  if(isNaN(km) || km <= 0){
-    document.getElementById("fareResult").innerHTML =
-    "Vui lòng nhập số Km hợp lệ";
-    return;
-  }
-
-  if(km <= 3.5){
-    tien = 30000;
-  }
-
-  else if(km <= 19){
-    tien = 30000 + (km - 3.5) * 9000;
-  }
-
-  else if(km <= 50){
-    tien = 30000 + (19 - 3.5) * 9000 + (km - 19) * 8000;
-  }
-
-  else if(km <= 100){
-    tien = 30000
-         + (19 - 3.5) * 9000
-         + (50 - 19) * 8000
-         + (km - 50) * 7000;
-  }
-
-  else{
-    tien = 30000
-         + (19 - 3.5) * 9000
-         + (50 - 19) * 8000
-         + (100 - 50) * 7000
-         + (km - 100) * 6000;
-  }
-
-  document.getElementById("fareResult").innerHTML =
-  "Quãng đường <b>" + km + " km</b><br>Ước tính: <b>" +
-  Math.round(tien).toLocaleString('vi-VN') +
-  "đ</b>";
-}
-
-/* enter để tính */
-document.getElementById("kmInput").addEventListener("keypress", function(e){
-  if(e.key === "Enter"){
-    tinhCuoc();
-  }
-});
-</script>
+{% include "includes/fare_widget.html" %}
 
 
 
@@ -295,22 +208,24 @@ document.getElementById("kmInput").addEventListener("keypress", function(e){
       <h3><b>Thông tin giá cước đi tỉnh ước tính*:</b></h3>
 
       <ul>
-        <li>Từ 20km đến 50km <b>đơn giá 8.000đ/km</b></li>
-        <li>Từ 50km đến 100km <b>đơn giá 7.000đ/km</b></li>
-        <li>Từ 100km đến 500km <b>đơn giá 6.000đ/km</b></li>
-        <li>Đón trả theo yêu cầu tại <b> Hà Nội </b></li>
+        <li>Từ <b>0km đến 3.5km</b> giá mở cửa <b>30.000đ</b></li>
+        <li>Từ <b>3.5km đến 12km</b> đơn giá <b>10.000đ/km</b></li>
+        <li>Từ <b>13km đến 25km</b> đơn giá <b>9.000đ/km</b></li>
+        <li>Từ <b>26km đến 50km</b> đơn giá <b>8.000đ/km</b></li>
+        <li>Từ <b>51km đến 100km</b> đơn giá <b>7.000đ/km</b></li>
+        <li>Từ <b>101km trở đi</b> đơn giá <b>6.000đ/km</b></li>
+        <li>Đón trả theo yêu cầu tại <b>Hà Nội</b></li>
         <li>Đơn giá chưa bao gồm phí cầu đường và các khoản phát sinh, có thể chênh lệch nhỏ so với thực tế</li>
       </ul>
 
-      <p><b>Ví dụ:</b> Khách hàng đi Hải Phòng <b>có đi đường cao tốc</b> <b>80km</b>, tổng số cước km là <b>610.000đ</b> (chưa bao gồm các loại phí, vé qua trạm thu phí).</p>
-
-      <p>Taxi Xanh Hà Nội phục vụ chu đáo, sạch sẽ chuyên nghiệp. Tài xế lái xe an toàn. Giá siêu rẻ</p>
+      <p>Taxi Xanh Hà Nội phục vụ chu đáo, sạch sẽ, chuyên nghiệp. Tài xế lái xe an toàn, giá hợp lý.</p>
 
       <p class="note"><i>Gọi ngay 0829133391 để đặt chuyến và đón khách sớm nhất</i></p>
     </div>
-    </div>
   </div>
+</div>
 </section>
+
 
 
 

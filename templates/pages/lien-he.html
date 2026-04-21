@@ -15,141 +15,482 @@
     <!-- MOBILE MENU -->
     {% include "includes/mobile-product.html" %}
 
-    <!-- ===== CÔNG CỤ TÍNH CƯỚC XE HOÀN CHỈNH ===== -->
-<section id="banggiacuoc" class="fare-section">
-  <div class="container">
+<!-- CHỈ THÊM ẢNH VÀO PHẦN LIÊN HỆ - KHÔNG ĐỤNG GÌ KHÁC -->
+<!-- DÁN NGAY SAU <p class="fare-sub"> ... </p> -->
 
-    <div class="fare-box">
 
-      <h2 class="fare-title">Tính giá cước xe đi tỉnh</h2>
+<!-- LIÊN HỆ -->
+          <h2 class="fare-title">
+            Liên hệ đặt xe nhanh 24/7
+          </h2>
 
-      <p class="fare-sub">
-        Nhập số Km để ước tính chi phí nhanh chóng
-      </p>
+<!-- templates/tools/gps_meter.html -->
+<!-- FULL FINAL GPS TOOL -->
+<!-- Có:
+1. Lấy GPS thật thiết bị
+2. Marker chạy realtime
+3. Map bám theo xe
+4. Vẽ cung đường xanh
+5. Km tăng dần
+6. Đếm thời gian
+7. Thành tiền
+8. Báo mất tín hiệu GPS
+9. Có lại tín hiệu tự chạy tiếp -->
 
-      <input type="number" id="kmInput" placeholder="Nhập số Km">
+<style>
+#gpsTool *{box-sizing:border-box;font-family:Roboto,Arial,sans-serif}
 
-      <button onclick="tinhCuoc()">Tính giá ngay</button>
-
-      <div class="fare-result" id="fareResult">
-        Giá tạm tính sẽ hiện tại đây
-      </div>
-
-      <div class="fare-table">
-        <div>0 → 3.5km : <b>30.000đ (Giá mở cửa)</b></div>
-        <div>3.5 → 19km : <b>9.000đ/km</b></div>
-        <div>20 → 50km : <b>8.000đ/km</b></div>
-        <div>50 → 100km : <b>7.000đ/km</b></div>
-        <div>Trên 100km : <b>6.000đ/km</b></div>
-      </div>
-
-      <div class="fare-note">
-        * Chưa bao gồm phí cầu đường, bến bãi nếu có (Liên hệ trực tiếp 0829133391 để có giá tốt hơn)
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-<script>
-function tinhCuoc(){
-
-  let km = parseFloat(document.getElementById("kmInput").value);
-  let tien = 0;
-
-  if(isNaN(km) || km <= 0){
-    document.getElementById("fareResult").innerHTML =
-    "Vui lòng nhập số Km hợp lệ";
-    return;
-  }
-
-  if(km <= 3.5){
-    tien = 30000;
-  }
-
-  else if(km <= 19){
-    tien = 30000 + (km - 3.5) * 9000;
-  }
-
-  else if(km <= 50){
-    tien = 30000 + (19 - 3.5) * 9000 + (km - 19) * 8000;
-  }
-
-  else if(km <= 100){
-    tien = 30000
-         + (19 - 3.5) * 9000
-         + (50 - 19) * 8000
-         + (km - 50) * 7000;
-  }
-
-  else{
-    tien = 30000
-         + (19 - 3.5) * 9000
-         + (50 - 19) * 8000
-         + (100 - 50) * 7000
-         + (km - 100) * 6000;
-  }
-
-  document.getElementById("fareResult").innerHTML =
-  "Quãng đường <b>" + km + " km</b><br>Ước tính: <b>" +
-  Math.round(tien).toLocaleString('vi-VN') +
-  "đ</b>";
+#gpsTool{
+max-width:520px;
+margin:auto;
+margin-bottom:28px;
+padding:18px;
+background:#fff;
+border-radius:24px;
+box-shadow:0 14px 35px rgba(0,0,0,.08)
 }
 
-/* enter để tính */
-document.getElementById("kmInput").addEventListener("keypress", function(e){
-  if(e.key === "Enter"){
-    tinhCuoc();
-  }
-});
-</script>
+#gpsTool h2{
+margin:0 0 14px;
+text-align:center;
+font-size:28px;
+font-weight:900;
+color:#14b8a6
+}
 
-    <!-- TIÊU ĐỀ -->
-    <h3>Dịch vụ xe đi tỉnh giá tốt – văn minh – nhanh chóng</h3>
+#gpsMap{
+width:100%;
+height:430px;
+border-radius:20px;
+overflow:hidden;
+background:#e5e7eb;
+margin-bottom:14px
+}
 
-    <!-- MÔ TẢ -->
-    <p>
-      Chúng tôi chuyên cung cấp dịch vụ xe đi tỉnh, đưa đón sân bay,
-    công tác, du lịch, cưới hỏi và thuê xe theo yêu cầu với mức giá
-    cạnh tranh, báo giá rõ ràng trước chuyến đi.
-    </p>
+.rowBtn{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-bottom:10px
+}
 
-    <!-- 🔴 DÒNG ĐỎ -->
-    <p style="color:#d60000; font-weight:600;">
-      👉 Cam kết không tăng giá bất hợp lý, hỗ trợ đặt xe nhanh,
-    đón đúng giờ, phục vụ 24/7 kể cả sáng sớm hoặc đêm muộn.
-    </p>
+.rowBtn button{
+height:46px;
+border:none;
+border-radius:16px;
+font-size:14px;
+font-weight:900;
+cursor:pointer;
+transition:.18s;
+box-shadow:0 8px 18px rgba(0,0,0,.08)
+}
 
-    <!-- CHÍNH SÁCH -->
-   <h3>Về chúng tôi</h3>
-     <p>
-    Với tiêu chí uy tín đặt lên hàng đầu, chúng tôi luôn mong muốn
-    mang đến trải nghiệm di chuyển thoải mái, tiết kiệm và chuyên nghiệp
-    cho từng khách hàng cá nhân, gia đình và doanh nghiệp.
-  </p>
+.rowBtn button:hover{transform:translateY(-2px)}
+.rowBtn button:active{transform:scale(.97)}
 
-  <div class="tab-box">
+#btnStart{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff}
+#btnPause{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+#btnStop{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+#btnReset{background:#eef2f7;color:#111827}
 
-  <div class="tabs">
-    <button class="tab active" data-tab="dk">Liên hệ</button>
-  </div>
+.card{
+margin-top:10px;
+padding:14px;
+border-radius:18px;
+background:#f8fafc
+}
 
-  <div class="tab-body">
+.label{
+font-size:13px;
+color:#64748b;
+margin-bottom:6px;
+font-weight:700
+}
 
-    <!-- ĐIỀU KIỆN -->
-    <div class="tab-content active" id="dk">
-      <ul>
-        <li>✔ 0829133391</li>
-        <li>✔ Hoặc ấn nút "Đặt xe ngay" và để lại số điện thoại</li>
-        <li>✔ Tài xế sẽ liên hệ báo giá ngay trong vòng 2 phút</li>
-      </ul>
-    </div>
+.big{
+font-size:38px;
+font-weight:900;
+line-height:1
+}
 
-  </div>
+.green{color:#16a34a}
+.blue{color:#0ea5e9}
+.red{color:#ef4444}
+</style>
 
+<section id="gpsTool">
+
+<h2>Bấm đồng hồ tính cước theo km</h2>
+
+<div id="gpsMap"></div>
+
+<div class="rowBtn">
+<button id="btnStart">BẮT ĐẦU</button>
+<button id="btnPause">TẠM DỪNG</button>
 </div>
 
+<div class="rowBtn">
+<button id="btnStop">KẾT THÚC</button>
+<button id="btnReset">LÀM MỚI</button>
+</div>
+
+<div class="card">
+<div class="label">Quãng đường thực tế</div>
+<div class="big green" id="kmText">0.00 km</div>
+</div>
+
+<div class="card">
+<div class="label">Thời gian</div>
+<div class="big blue" id="timeText">00:00</div>
+</div>
+
+<div class="card">
+<div class="label">Thành tiền</div>
+<div class="big red" id="moneyText">0đ</div>
+</div>
+
+<div class="card">
+<div class="label">Trạng thái</div>
+<div id="statusText">Chưa bắt đầu</div>
+</div>
+
+</section>
+
+<link rel="stylesheet" href="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.css">
+<script src="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.js"></script>
+
+<script>
+(function(){
+
+const MAP_KEY="6SDBytP432zlGVgI9KZSm5yQUZP6HLEhQh8xvWz2";
+goongjs.accessToken=MAP_KEY;
+
+function el(id){return document.getElementById(id)}
+
+let map;
+let liveMarker;
+let watchId=null;
+let timer=null;
+let gpsTimeout=null;
+
+let running=false;
+let mapReady=false;
+
+let totalKm=0;
+let seconds=0;
+let lastPos=null;
+let coords=[];
+
+/* giá cước */
+function fare(k){
+if(k<=3.5) return 30000;
+if(k<=19) return 30000+(k-3.5)*9000;
+if(k<=50) return 169500+(k-19)*8000;
+if(k<=100) return 417500+(k-50)*7000;
+return 767500+(k-100)*6000;
+}
+
+function initMap(){
+
+map=new goongjs.Map({
+container:"gpsMap",
+style:"https://tiles.goong.io/assets/goong_map_web.json",
+center:[105.8342,21.0278],
+zoom:15
+});
+
+map.addControl(new goongjs.NavigationControl());
+
+map.on("load",function(){
+
+liveMarker=new goongjs.Marker({
+color:"#ef4444"
+})
+.setLngLat([105.8342,21.0278])
+.addTo(map);
+
+map.addSource("routeLine",{
+type:"geojson",
+data:{
+type:"Feature",
+geometry:{
+type:"LineString",
+coordinates:[]
+}
+}
+});
+
+map.addLayer({
+id:"routeLine",
+type:"line",
+source:"routeLine",
+paint:{
+"line-color":"#16a34a",
+"line-width":6
+},
+layout:{
+"line-cap":"round",
+"line-join":"round"
+}
+});
+
+mapReady=true;
+
+});
+
+}
+
+function kmBetween(a,b,c,d){
+
+const R=6371;
+const dLat=(c-a)*Math.PI/180;
+const dLng=(d-b)*Math.PI/180;
+
+const x=
+Math.sin(dLat/2)**2+
+Math.cos(a*Math.PI/180)*
+Math.cos(c*Math.PI/180)*
+Math.sin(dLng/2)**2;
+
+return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+
+function updateUI(){
+
+el("kmText").innerText=totalKm.toFixed(2)+" km";
+
+let m=Math.floor(seconds/60);
+let s=seconds%60;
+
+el("timeText").innerText=
+String(m).padStart(2,"0")+":"+
+String(s).padStart(2,"0");
+
+el("moneyText").innerText=
+Math.round(fare(totalKm)).toLocaleString("vi-VN")+"đ";
+
+}
+
+function drawRoute(){
+
+if(!mapReady) return;
+
+map.getSource("routeLine").setData({
+type:"Feature",
+geometry:{
+type:"LineString",
+coordinates:coords
+}
+});
+
+}
+
+function startTimer(){
+
+if(timer) return;
+
+timer=setInterval(function(){
+seconds++;
+updateUI();
+},1000);
+
+}
+
+function stopTimer(){
+clearInterval(timer);
+timer=null;
+}
+
+function startGPS(){
+
+if(running || !mapReady) return;
+
+running=true;
+el("statusText").innerText="Đang chạy...";
+startTimer();
+
+watchId=navigator.geolocation.watchPosition(function(pos){
+
+clearTimeout(gpsTimeout);
+
+el("statusText").innerText="Đang chạy...";
+
+gpsTimeout=setTimeout(function(){
+el("statusText").innerText="Đang mất tín hiệu GPS...";
+},8000);
+
+const lat=pos.coords.latitude;
+const lng=pos.coords.longitude;
+
+liveMarker.setLngLat([lng,lat]);
+
+map.easeTo({
+center:[lng,lat],
+zoom:17,
+duration:600
+});
+
+coords.push([lng,lat]);
+drawRoute();
+
+if(lastPos){
+
+let km=kmBetween(
+lastPos.lat,lastPos.lng,
+lat,lng
+);
+
+/* lọc sai số */
+if(km>0.003 && km<0.5){
+totalKm+=km;
+updateUI();
+}
+
+}
+
+lastPos={lat:lat,lng:lng};
+
+},function(){
+
+el("statusText").innerText="Không lấy được GPS";
+
+},{
+enableHighAccuracy:true,
+maximumAge:0,
+timeout:10000
+});
+
+}
+
+function pauseGPS(){
+
+if(watchId){
+navigator.geolocation.clearWatch(watchId);
+watchId=null;
+}
+
+clearTimeout(gpsTimeout);
+
+running=false;
+stopTimer();
+
+el("statusText").innerText="Tạm dừng";
+
+}
+
+function stopGPS(){
+
+pauseGPS();
+el("statusText").innerText="Đã kết thúc";
+
+}
+
+function resetGPS(){
+
+pauseGPS();
+
+totalKm=0;
+seconds=0;
+lastPos=null;
+coords=[];
+
+updateUI();
+drawRoute();
+
+if(mapReady){
+
+liveMarker.setLngLat([105.8342,21.0278]);
+
+map.easeTo({
+center:[105.8342,21.0278],
+zoom:15,
+duration:500
+});
+
+}
+
+el("statusText").innerText="Chưa bắt đầu";
+
+}
+
+el("btnStart").onclick=startGPS;
+el("btnPause").onclick=pauseGPS;
+el("btnStop").onclick=stopGPS;
+el("btnReset").onclick=resetGPS;
+
+initMap();
+updateUI();
+
+})();
+</script>
+
+          
+          <p class="fare-sub">
+            Chúng tôi chuyên cung cấp dịch vụ xe đi tỉnh, đưa đón sân bay,
+    công tác, du lịch, cưới hỏi và thuê xe theo yêu cầu với mức giá
+    cạnh tranh, báo giá rõ ràng trước chuyến đi.
+          </p>
+
+          <div style="
+            text-align:left;
+            margin-top:18px;
+            line-height:2;
+            font-size:16px;
+            color:#444;
+          ">
+            <p>📞 Hotline: <b>0829133391</b></p>
+            <p>💬 Zalo: <b>0829133391</b></p>
+            <p>📍 Phục vụ Hà Nội và các tỉnh lân cận</p>
+            <p>⏰ Hoạt động 24/7 kể cả sáng sớm, đêm muộn</p>
+          </div>
+
+          <div style="
+            margin-top:18px;
+            background:#ffffff;
+            border:1px solid #e9f3f1;
+            border-radius:14px;
+            padding:18px;
+            text-align:left;
+            line-height:1.9;
+            font-size:15px;
+          ">
+            <h3 style="
+              color:#00bfa5;
+              margin-bottom:10px;
+              font-size:18px;
+            ">
+              Cam kết dịch vụ
+            </h3>
+
+            <p>✔ Báo giá rõ ràng trước chuyến đi</p>
+            <p>✔ Không phát sinh chi phí vô lý</p>
+            <p>✔ Tài xế lịch sự – đúng giờ</p>
+            <p>✔ Xe sạch sẽ – điều hòa mát</p>
+            <p>✔ Có xe nhanh giờ cao điểm</p>
+          </div>
+
+          <p style="
+            margin-top:18px;
+            color:#e53935;
+            font-weight:700;
+            font-size:17px;
+          ">
+            Gọi ngay để giữ xe sớm – cuối tuần và lễ Tết thường kín lịch.
+          </p>
+
+
+   {% include "includes/fare_widget.html" %}
+
+
+    <!-- CTA -->
+    <div class="info-box" style="margin-top:20px;">
+      <h3>Liên hệ đặt xe nhanh</h3>
+      <p>📞 Hotline / Zalo: <b>0829133391</b></p>
+      <p>🚗 Nhận chuyến nhanh - báo giá trong 2 phút</p>
+      <p>⏰ Phục vụ 24/7 kể cả sáng sớm và đêm muộn</p>
+    </div>
+
+  </main>
 
   </main>
 
@@ -171,19 +512,21 @@ document.getElementById("kmInput").addEventListener("keypress", function(e){
     <div class="slider-wrapper no-slide">
       <div class="slider-track">
 
-        <a href="/the-chap-nha/" class="loan-item">
+               <a href="/sanbay-noibai/" class="loan-item">
+  <div class="loan-img">
+    <img src="{% static 'assets/images/sanbay-noibai.jpg' %}">
+  </div>
+  <p>Hà Nội - Sân bay<br>Từ 250.000đ</p>
+</a>
+
+        <a href="/hanoi-halong/" class="loan-item">
   <div class="loan-img">
     <img src="{% static 'assets/images/sp12.jpg' %}">
   </div>
   <p>Hà Nội - Hạ Long<br>Từ 1.100.000đ</p>
 </a>
 
-        <a href="/hanoi-haiphong/" class="loan-item">
-  <div class="loan-img">
-    <img src="{% static 'assets/images/sp13.jpg' %}">
-  </div>
-  <p>Hà Nội - Hải Phòng<br>Từ 800.000đ</p>
-</a>
+
 
         <a href="/hanoi-bacninh/" class="loan-item">
   <div class="loan-img">
@@ -192,13 +535,13 @@ document.getElementById("kmInput").addEventListener("keypress", function(e){
    <p>Hà Nội - Bắc Ninh<br>Từ 300.000đ</p>
 </a>
 
-        <a href="/hanoi-haiduong/" class="loan-item">
+<a href="/hanoi-haiphong/" class="loan-item">
   <div class="loan-img">
-    <img src="{% static 'assets/images/sp14.jpg' %}">
+    <img src="{% static 'assets/images/sp13.jpg' %}">
   </div>
-  <p>Hà Nội - Hải Dương<br>Từ 500.000đ</p>
+  <p>Hà Nội - Hải Phòng<br>Từ 800.000đ</p>
 </a>
-
+        
 
       </div>
     </div>
@@ -207,56 +550,63 @@ document.getElementById("kmInput").addEventListener("keypress", function(e){
     <div class="slider-wrapper auto-slide">
       <div class="slider-track">
 
-        <a href="/hanoi-halong/" class="loan-item">
+        <a href="/hanoi-ninhbinh/" class="loan-item">
   <div class="loan-img">
     <img src="{% static 'assets/images/sp1.jpg' %}">
   </div>
   <p>Hà Nội - Ninh Bình<br>Từ 800.000đ</p>
 </a>
 
-        <a href="/vay-theo-cccd/" class="loan-item">
+        <a href="/hanoi-thainguyen/" class="loan-item">
   <div class="loan-img">
     <img src="{% static 'assets/images/sp2.jpg' %}">
   </div>
   <p>HàNội-Thái Nguyên<br>Từ 800.000đ</p>
 </a>
+<a href="/hanoi-haiduong/" class="loan-item">
+  <div class="loan-img">
+    <img src="{% static 'assets/images/sp14.jpg' %}">
+  </div>
+  <p>Hà Nội - Hải Dương<br>Từ 500.000đ</p>
+</a>
 
-        <a href="/vay-theo-lich-su/" class="loan-item">
+
+        <a href="/hanoi-bacgiang/" class="loan-item">
   <div class="loan-img">
     <img src="{% static 'assets/images/sp3.jpg' %}">
   </div>
   <p>Hà Nội - Bắc Giang<br>Từ 800.000đ</p>
 </a>
 
-        <a href="/vay-ho-kinh-doanh/" class="loan-item">
+        <a href="/hanoi-langson/" class="loan-item">
   <div class="loan-img">
     <img src="{% static 'assets/images/sp4.jpg' %}">
   </div>
   <p>Hà Nội - Lạng Sơn<br>Từ 1.100.000đ</p>
 </a>
 
-        <a href="/vay-theo-xe/" class="loan-item">
+        <a href="/hanoi-laocai/" class="loan-item">
   <div class="loan-img">
     <img src="{% static 'assets/images/sp5.jpg' %}">
   </div>
   <p>Hà Nội - Lào Cai<br>Từ 2.000.000đ</p>
 </a>
 
-        <a href="/vay-bao-hiem/" class="loan-item">
+        <a href="/hanoi-namdinh/" class="loan-item">
   <div class="loan-img">
     <img src="{% static 'assets/images/sp6.jpg' %}">
   </div>
   <p>Hà Nội - Nam Định<br>Từ 800.000đ</p>
 </a>
 
-        <a href="/vay-mua-nha/" class="loan-item">
+        <a href="/hanoi-thanhhoa/" class="loan-item">
   <div class="loan-img">
     <img src="{% static 'assets/images/sp7.jpg' %}">
   </div>
   <p>Hà Nội - Thanh Hóa<br>Từ 1.100.000đ</p>
 </a>
 
-        <a href="/vay-mua-oto/" class="loan-item">
+        <a href="/hanoi-hoabinh/" class="loan-item">
   <div class="loan-img">
     <img src="{% static 'assets/images/sp8.jpg' %}">
   </div>
