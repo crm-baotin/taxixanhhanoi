@@ -20,6 +20,408 @@
     <!-- ===== GIỚI THIỆU GIÁ CƯỚC ĐI TỈNH ===== -->
 <section class="province-price">
   <div class="container">
+
+    <!-- templates/tools/gps_meter.html -->
+<!-- FULL FINAL GPS TOOL -->
+<!-- Có:
+1. Lấy GPS thật thiết bị
+2. Marker chạy realtime
+3. Map bám theo xe
+4. Vẽ cung đường xanh
+5. Km tăng dần
+6. Đếm thời gian
+7. Thành tiền
+8. Báo mất tín hiệu GPS
+9. Có lại tín hiệu tự chạy tiếp -->
+
+<style>
+#gpsTool *{box-sizing:border-box;font-family:Roboto,Arial,sans-serif}
+
+#gpsTool{
+max-width:520px;
+margin:auto;
+margin-bottom:28px;
+padding:18px;
+background:#fff;
+border-radius:24px;
+box-shadow:0 14px 35px rgba(0,0,0,.08)
+}
+
+#gpsTool h2{
+margin:0 0 14px;
+text-align:center;
+font-size:28px;
+font-weight:900;
+color:#14b8a6
+}
+
+#gpsMap{
+width:100%;
+height:430px;
+border-radius:20px;
+overflow:hidden;
+background:#e5e7eb;
+margin-bottom:14px
+}
+
+.rowBtn{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-bottom:10px
+}
+
+.rowBtn button{
+height:46px;
+border:none;
+border-radius:16px;
+font-size:14px;
+font-weight:900;
+cursor:pointer;
+transition:.18s;
+box-shadow:0 8px 18px rgba(0,0,0,.08)
+}
+
+.rowBtn button:hover{transform:translateY(-2px)}
+.rowBtn button:active{transform:scale(.97)}
+
+#btnStart{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff}
+#btnPause{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+#btnStop{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+#btnReset{background:#eef2f7;color:#111827}
+
+.card{
+margin-top:10px;
+padding:14px;
+border-radius:18px;
+background:#f8fafc
+}
+
+.label{
+font-size:13px;
+color:#64748b;
+margin-bottom:6px;
+font-weight:700
+}
+
+.big{
+font-size:38px;
+font-weight:900;
+line-height:1
+}
+
+.green{color:#16a34a}
+.blue{color:#0ea5e9}
+.red{color:#ef4444}
+</style>
+
+<section id="gpsTool">
+
+<h2>Bấm đồng hồ tính cước theo km</h2>
+
+<div id="gpsMap"></div>
+
+<div class="rowBtn">
+<button id="btnStart">BẮT ĐẦU</button>
+<button id="btnPause">TẠM DỪNG</button>
+</div>
+
+<div class="rowBtn">
+<button id="btnStop">KẾT THÚC</button>
+<button id="btnReset">LÀM MỚI</button>
+</div>
+
+<div class="card">
+<div class="label">Quãng đường thực tế</div>
+<div class="big green" id="kmText">0.00 km</div>
+</div>
+
+<div class="card">
+<div class="label">Thời gian</div>
+<div class="big blue" id="timeText">00:00</div>
+</div>
+
+<div class="card">
+<div class="label">Thành tiền</div>
+<div class="big red" id="moneyText">0đ</div>
+</div>
+
+<div class="card">
+<div class="label">Trạng thái</div>
+<div id="statusText">Chưa bắt đầu</div>
+</div>
+
+</section>
+
+<link rel="stylesheet" href="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.css">
+<script src="https://unpkg.com/@goongmaps/goong-js/dist/goong-js.js"></script>
+
+<script>
+(function(){
+
+const MAP_KEY="6SDBytP432zlGVgI9KZSm5yQUZP6HLEhQh8xvWz2";
+goongjs.accessToken=MAP_KEY;
+
+function el(id){return document.getElementById(id)}
+
+let map;
+let liveMarker;
+let watchId=null;
+let timer=null;
+let gpsTimeout=null;
+
+let running=false;
+let mapReady=false;
+
+let totalKm=0;
+let seconds=0;
+let lastPos=null;
+let coords=[];
+
+/* giá cước */
+function fare(k){
+if(k<=3.5) return 30000;
+if(k<=19) return 30000+(k-3.5)*9000;
+if(k<=50) return 169500+(k-19)*8000;
+if(k<=100) return 417500+(k-50)*7000;
+return 767500+(k-100)*6000;
+}
+
+function initMap(){
+
+map=new goongjs.Map({
+container:"gpsMap",
+style:"https://tiles.goong.io/assets/goong_map_web.json",
+center:[105.8342,21.0278],
+zoom:15
+});
+
+map.addControl(new goongjs.NavigationControl());
+
+map.on("load",function(){
+
+liveMarker=new goongjs.Marker({
+color:"#ef4444"
+})
+.setLngLat([105.8342,21.0278])
+.addTo(map);
+
+map.addSource("routeLine",{
+type:"geojson",
+data:{
+type:"Feature",
+geometry:{
+type:"LineString",
+coordinates:[]
+}
+}
+});
+
+map.addLayer({
+id:"routeLine",
+type:"line",
+source:"routeLine",
+paint:{
+"line-color":"#16a34a",
+"line-width":6
+},
+layout:{
+"line-cap":"round",
+"line-join":"round"
+}
+});
+
+mapReady=true;
+
+});
+
+}
+
+function kmBetween(a,b,c,d){
+
+const R=6371;
+const dLat=(c-a)*Math.PI/180;
+const dLng=(d-b)*Math.PI/180;
+
+const x=
+Math.sin(dLat/2)**2+
+Math.cos(a*Math.PI/180)*
+Math.cos(c*Math.PI/180)*
+Math.sin(dLng/2)**2;
+
+return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+
+function updateUI(){
+
+el("kmText").innerText=totalKm.toFixed(2)+" km";
+
+let m=Math.floor(seconds/60);
+let s=seconds%60;
+
+el("timeText").innerText=
+String(m).padStart(2,"0")+":"+
+String(s).padStart(2,"0");
+
+el("moneyText").innerText=
+Math.round(fare(totalKm)).toLocaleString("vi-VN")+"đ";
+
+}
+
+function drawRoute(){
+
+if(!mapReady) return;
+
+map.getSource("routeLine").setData({
+type:"Feature",
+geometry:{
+type:"LineString",
+coordinates:coords
+}
+});
+
+}
+
+function startTimer(){
+
+if(timer) return;
+
+timer=setInterval(function(){
+seconds++;
+updateUI();
+},1000);
+
+}
+
+function stopTimer(){
+clearInterval(timer);
+timer=null;
+}
+
+function startGPS(){
+
+if(running || !mapReady) return;
+
+running=true;
+el("statusText").innerText="Đang chạy...";
+startTimer();
+
+watchId=navigator.geolocation.watchPosition(function(pos){
+
+clearTimeout(gpsTimeout);
+
+el("statusText").innerText="Đang chạy...";
+
+gpsTimeout=setTimeout(function(){
+el("statusText").innerText="Đang mất tín hiệu GPS...";
+},8000);
+
+const lat=pos.coords.latitude;
+const lng=pos.coords.longitude;
+
+liveMarker.setLngLat([lng,lat]);
+
+map.easeTo({
+center:[lng,lat],
+zoom:17,
+duration:600
+});
+
+coords.push([lng,lat]);
+drawRoute();
+
+if(lastPos){
+
+let km=kmBetween(
+lastPos.lat,lastPos.lng,
+lat,lng
+);
+
+/* lọc sai số */
+if(km>0.003 && km<0.5){
+totalKm+=km;
+updateUI();
+}
+
+}
+
+lastPos={lat:lat,lng:lng};
+
+},function(){
+
+el("statusText").innerText="Không lấy được GPS";
+
+},{
+enableHighAccuracy:true,
+maximumAge:0,
+timeout:10000
+});
+
+}
+
+function pauseGPS(){
+
+if(watchId){
+navigator.geolocation.clearWatch(watchId);
+watchId=null;
+}
+
+clearTimeout(gpsTimeout);
+
+running=false;
+stopTimer();
+
+el("statusText").innerText="Tạm dừng";
+
+}
+
+function stopGPS(){
+
+pauseGPS();
+el("statusText").innerText="Đã kết thúc";
+
+}
+
+function resetGPS(){
+
+pauseGPS();
+
+totalKm=0;
+seconds=0;
+lastPos=null;
+coords=[];
+
+updateUI();
+drawRoute();
+
+if(mapReady){
+
+liveMarker.setLngLat([105.8342,21.0278]);
+
+map.easeTo({
+center:[105.8342,21.0278],
+zoom:15,
+duration:500
+});
+
+}
+
+el("statusText").innerText="Chưa bắt đầu";
+
+}
+
+el("btnStart").onclick=startGPS;
+el("btnPause").onclick=pauseGPS;
+el("btnStop").onclick=stopGPS;
+el("btnReset").onclick=resetGPS;
+
+initMap();
+updateUI();
+
+})();
+</script>
+
+
      {% include "includes/fare_widget.html" %}
     <h2>Giá cước xe đi tỉnh tham khảo</h2>
 
