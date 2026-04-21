@@ -3,7 +3,7 @@
 {% block content %}
 {% load static %}
 
-<div class="container page-layout">
+<div class="page-layout full-page">
 
   <!-- SIDEBAR -->
 {% include "includes/sidebar.html" %}
@@ -21,91 +21,98 @@
 <section class="province-price">
   <div class="container">
 
-    <!-- templates/tools/gps_meter.html -->
-<!-- FULL FINAL GPS TOOL -->
-<!-- Có:
-1. Lấy GPS thật thiết bị
-2. Marker chạy realtime
-3. Map bám theo xe
-4. Vẽ cung đường xanh
-5. Km tăng dần
-6. Đếm thời gian
-7. Thành tiền
-8. Báo mất tín hiệu GPS
-9. Có lại tín hiệu tự chạy tiếp -->
+ <!-- templates/tools/gps_meter.html -->
+<!-- FULL FILE CHUẨN - GIỮ NGUYÊN LOGIC GPS -->
+<!-- CHỈ TINH GỌN MOBILE + MÀN HÌNH KHÔNG TẮT -->
 
 <style>
-#gpsTool *{box-sizing:border-box;font-family:Roboto,Arial,sans-serif}
+#gpsTool *{
+box-sizing:border-box;
+font-family:Roboto,Arial,sans-serif
+}
 
 #gpsTool{
 max-width:520px;
 margin:auto;
-margin-bottom:28px;
-padding:18px;
+margin-bottom:24px;
+padding:12px;
 background:#fff;
-border-radius:24px;
-box-shadow:0 14px 35px rgba(0,0,0,.08)
+border-radius:22px;
+box-shadow:0 10px 28px rgba(0,0,0,.08)
 }
 
 #gpsTool h2{
-margin:0 0 14px;
+margin:0 0 10px;
 text-align:center;
-font-size:28px;
+font-size:22px;
 font-weight:900;
+line-height:1.2;
 color:#14b8a6
 }
 
+/* MAP CO GỌN */
 #gpsMap{
 width:100%;
-height:430px;
-border-radius:20px;
+height:270px;
+border-radius:18px;
 overflow:hidden;
 background:#e5e7eb;
-margin-bottom:14px
+margin-bottom:10px
 }
 
 .rowBtn{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
-margin-bottom:10px
+gap:8px;
+margin-bottom:8px
 }
 
 .rowBtn button{
-height:46px;
+height:40px;
 border:none;
-border-radius:16px;
-font-size:14px;
+border-radius:14px;
+font-size:12px;
 font-weight:900;
 cursor:pointer;
-transition:.18s;
-box-shadow:0 8px 18px rgba(0,0,0,.08)
+box-shadow:0 6px 14px rgba(0,0,0,.08)
 }
 
-.rowBtn button:hover{transform:translateY(-2px)}
-.rowBtn button:active{transform:scale(.97)}
+#btnStart{
+background:linear-gradient(135deg,#16a34a,#15803d);
+color:#fff
+}
 
-#btnStart{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff}
-#btnPause{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
-#btnStop{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
-#btnReset{background:#eef2f7;color:#111827}
+#btnPause{
+background:linear-gradient(135deg,#f59e0b,#d97706);
+color:#fff
+}
+
+#btnStop{
+background:linear-gradient(135deg,#ef4444,#dc2626);
+color:#fff
+}
+
+#btnReset{
+background:#eef2f7;
+color:#111827
+}
 
 .card{
-margin-top:10px;
-padding:14px;
-border-radius:18px;
+margin-top:8px;
+padding:10px 12px;
+border-radius:16px;
 background:#f8fafc
 }
 
 .label{
-font-size:13px;
+font-size:11px;
 color:#64748b;
-margin-bottom:6px;
+margin-bottom:4px;
 font-weight:700
 }
 
 .big{
-font-size:38px;
+font-size:28px;
 font-weight:900;
 line-height:1
 }
@@ -113,6 +120,11 @@ line-height:1
 .green{color:#16a34a}
 .blue{color:#0ea5e9}
 .red{color:#ef4444}
+
+#statusText{
+font-size:13px;
+font-weight:700
+}
 </style>
 
 <section id="gpsTool">
@@ -159,6 +171,27 @@ line-height:1
 <script>
 (function(){
 
+/* ===== GIỮ MÀN HÌNH SÁNG ===== */
+let wakeLock=null;
+
+async function keepScreenOn(){
+try{
+if("wakeLock" in navigator){
+wakeLock=await navigator.wakeLock.request("screen");
+}
+}catch(e){}
+}
+
+document.addEventListener("visibilitychange",async function(){
+if(document.visibilityState==="visible"){
+keepScreenOn();
+}
+});
+
+keepScreenOn();
+
+/* ===== CODE GPS GỐC CỦA ÔNG ===== */
+
 const MAP_KEY="6SDBytP432zlGVgI9KZSm5yQUZP6HLEhQh8xvWz2";
 goongjs.accessToken=MAP_KEY;
 
@@ -178,7 +211,6 @@ let seconds=0;
 let lastPos=null;
 let coords=[];
 
-/* giá cước */
 function fare(k){
 if(k<=3.5) return 30000;
 if(k<=19) return 30000+(k-3.5)*9000;
@@ -200,9 +232,7 @@ map.addControl(new goongjs.NavigationControl());
 
 map.on("load",function(){
 
-liveMarker=new goongjs.Marker({
-color:"#ef4444"
-})
+liveMarker=new goongjs.Marker({color:"#ef4444"})
 .setLngLat([105.8342,21.0278])
 .addTo(map);
 
@@ -265,7 +295,6 @@ String(s).padStart(2,"0");
 
 el("moneyText").innerText=
 Math.round(fare(totalKm)).toLocaleString("vi-VN")+"đ";
-
 }
 
 function drawRoute(){
@@ -283,14 +312,12 @@ coordinates:coords
 }
 
 function startTimer(){
-
 if(timer) return;
 
 timer=setInterval(function(){
 seconds++;
 updateUI();
 },1000);
-
 }
 
 function stopTimer(){
@@ -337,7 +364,6 @@ lastPos.lat,lastPos.lng,
 lat,lng
 );
 
-/* lọc sai số */
 if(km>0.003 && km<0.5){
 totalKm+=km;
 updateUI();
@@ -372,14 +398,11 @@ running=false;
 stopTimer();
 
 el("statusText").innerText="Tạm dừng";
-
 }
 
 function stopGPS(){
-
 pauseGPS();
 el("statusText").innerText="Đã kết thúc";
-
 }
 
 function resetGPS(){
@@ -407,7 +430,6 @@ duration:500
 }
 
 el("statusText").innerText="Chưa bắt đầu";
-
 }
 
 el("btnStart").onclick=startGPS;
@@ -420,7 +442,6 @@ updateUI();
 
 })();
 </script>
-
 
      {% include "includes/fare_widget.html" %}
     <h2>Giá cước xe đi tỉnh tham khảo</h2>
