@@ -2955,32 +2955,3 @@ html {
    color:#ff0000 !important;
    font-weight:600;
 }
-
-@media (max-width:768px){
-
-.full-page{
-width:100%;
-max-width:100%;
-padding:0;
-margin:0;
-}
-
-.full-page .content{
-width:100%;
-max-width:100%;
-padding:0;
-margin:0;
-}
-
-.full-page #banggiacuoc{
-width:100%;
-padding:16px 6px;
-}
-
-.full-page #banggiacuoc .wrap{
-width:100%;
-max-width:100%;
-margin:0;
-}
-
-}

@@ -65,6 +65,167 @@ border-bottom:1px solid #f5f5f5
 }
 .suggest div:last-child{border-bottom:none}
 .modeOn{background:#f59e0b!important;color:#fff!important}
+
+/* mobile only */
+@media (max-width:768px){
+
+/* khối ngoài gọn hơn */
+#banggiacuoc{
+padding:12px 6px !important;
+}
+
+/* card chính */
+#banggiacuoc .wrap{
+border-radius:20px !important;
+}
+
+/* tiêu đề nhỏ lại */
+#banggiacuoc h2{
+font-size:18px !important;
+margin:4px 0 8px !important;
+line-height:1.15 !important;
+}
+
+/* ô nhập thấp hơn */
+#banggiacuoc input{
+height:38px !important;
+margin-bottom:6px !important;
+padding:0 12px !important;
+font-size:16px !important;
+}
+
+/* hàng nút */
+#banggiacuoc .row{
+gap:5px !important;
+margin-top:2px !important;
+}
+
+#banggiacuoc button{
+height:34px !important;
+font-size:11px !important;
+padding:0 8px !important;
+}
+
+/* MAP CO LẠI */
+#taxiMap{
+height:255px !important;
+}
+
+/* khối tiền gọn */
+.card-money{
+padding:10px 12px !important;
+}
+
+#phoneBook{
+height:36px !important;
+margin-bottom:6px !important;
+}
+
+#fareText{
+font-size:12px !important;
+}
+
+#farePrice{
+font-size:28px !important;
+}
+
+#bookNow{
+height:50px !important;
+width:128px !important;
+font-size:13px !important;
+}
+
+/* nhập km */
+.card{
+padding:10px 12px !important;
+}
+
+.pricebox{
+margin:8px !important;
+padding:10px !important;
+font-size:12px !important;
+line-height:1.7 !important;
+}
+
+.note{
+font-size:11px !important;
+padding-bottom:8px !important;
+}
+
+}
+@media (max-width:768px){
+
+/* TRẢ KHỐI VỀ NHƯ CŨ */
+#banggiacuoc{
+padding:12px 6px !important;
+margin:0 !important;
+width:100% !important;
+}
+
+#banggiacuoc .wrap{
+width:100% !important;
+max-width:100% !important;
+margin:0 !important;
+border-radius:20px !important;
+box-shadow:0 10px 30px rgba(0,0,0,.08) !important;
+}
+
+/* CHỈ FIX PHẦN ĐẦU */
+#banggiacuoc .top{
+padding:18px 12px 10px !important;   /* tăng trên */
+}
+
+/* HIỆN ĐỦ CHỮ */
+#banggiacuoc h2{
+display:block !important;
+font-size:18px !important;
+line-height:1.15 !important;
+margin:0 0 8px !important;
+padding-top:6px !important;
+text-align:center !important;
+color:#14b8a6 !important;
+}
+
+/* map giữ như cũ */
+#taxiMap{
+height:255px !important;
+border-radius:0 !important;
+}
+
+}
+/* khi nhảy tới anchor chừa khoảng header */
+#banggiacuoc{
+scroll-margin-top:90px;
+}
+
+@media(max-width:768px){
+#banggiacuoc{
+scroll-margin-top:78px;
+}
+}
+
+</style>
+
+<script>
+/* nếu nút đang dùng href="#banggiacuoc" thì thêm JS này cuối file */
+
+document.querySelectorAll('a[href="#banggiacuoc"]').forEach(function(btn){
+
+btn.addEventListener("click",function(e){
+
+e.preventDefault();
+
+document.getElementById("banggiacuoc")
+.scrollIntoView({
+behavior:"smooth",
+block:"start"
+});
+
+});
+
+});
+</script>
+
 </style>
 
 <section id="banggiacuoc">
