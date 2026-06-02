@@ -27,12 +27,74 @@ font-weight:800;cursor:pointer;padding:0 12px;min-width:auto
 .goongjs-ctrl-group button,.mapboxgl-ctrl-group button{
 width:28px!important;height:28px!important;font-size:13px!important
 }
-#btnPickA,#btnPickB{
-flex:0;white-space:nowrap;font-size:11px!important;
-padding:0 10px;background:#f8fafc!important;border:1px solid #e5e7eb
+/* ===== HÀNG NÚT ===== */
+
+#btnLocate,
+#btnPickA,
+#btnPickB{
+flex:1;
+height:42px;
+white-space:nowrap;
+font-size:12px!important;
+padding:0 12px;
+border-radius:14px;
+font-weight:800;
+transition:all .22s ease;
 }
-#btnLocate{flex:1}
-#btnRoute{flex:1.2}
+
+/* vị trí tôi */
+#btnLocate{
+background:linear-gradient(135deg,#dff9fb,#c7ecee)!important;
+border:1px solid #b2dfdb;
+color:#111827;
+}
+
+/* ghim */
+#btnPickA,
+#btnPickB{
+background:#f8fafc!important;
+border:1px solid #e5e7eb;
+}
+
+/* hover */
+#btnLocate:hover,
+#btnPickA:hover,
+#btnPickB:hover{
+transform:translateY(-1px);
+box-shadow:0 6px 14px rgba(0,0,0,.08);
+}
+
+/* active */
+.modeOn{
+background:#f59e0b!important;
+color:#fff!important;
+border-color:#f59e0b!important;
+box-shadow:0 8px 20px rgba(245,158,11,.28);
+}
+
+/* nút đặt xe */
+#bookNow{
+width:185px;
+height:78px;
+border:none;
+border-radius:22px;
+background:linear-gradient(135deg,#ff4d4f,#dc2626);
+color:#fff;
+font-size:18px;
+font-weight:900;
+cursor:pointer;
+transition:all .22s ease;
+box-shadow:0 10px 24px rgba(239,68,68,.28);
+}
+
+#bookNow:hover{
+transform:translateY(-2px) scale(1.02);
+box-shadow:0 16px 34px rgba(239,68,68,.35);
+}
+
+#bookNow:active{
+transform:scale(.97);
+}
 #taxiMap{width:100%;height:360px;background:#e5e7eb}
 .card-money{padding:14px 16px;border-top:1px solid #f1f5f9;background:#fff}
 #phoneBook{
@@ -41,12 +103,75 @@ border-radius:14px;padding:0 14px;font-size:14px;margin-bottom:10px
 }
 .money-wrap{display:flex;gap:10px;align-items:flex-end}
 .money-left{flex:1}
-#fareText{font-size:14px;color:#64748b;margin-bottom:4px}
-#farePrice{font-size:34px;font-weight:900;color:#16a34a;line-height:1}
+/* text km */
+#fareText{
+font-size:17px;
+font-weight:800;
+color:#334155;
+margin-bottom:6px;
+}
+
+/* giá tiền */
+#farePrice{
+font-size:42px;
+font-weight:900;
+color:#16a34a;
+line-height:1;
+letter-spacing:-1px;
+}
+
+/* nút đặt xe */
 #bookNow{
-width:150px;height:72px;border:none;border-radius:18px;
-background:linear-gradient(135deg,#ef4444,#dc2626);
-color:#fff;font-size:16px;font-weight:900;cursor:pointer
+width:205px;
+height:86px;
+border:none;
+border-radius:26px;
+background:linear-gradient(135deg,#ff4d4f,#dc2626);
+color:#fff;
+font-size:25px;
+font-weight:900;
+cursor:pointer;
+transition:all .22s ease;
+box-shadow:
+0 12px 30px rgba(239,68,68,.34),
+0 0 18px rgba(239,68,68,.18);
+position:relative;
+overflow:hidden;
+}
+
+/* hiệu ứng sáng */
+#bookNow::before{
+content:"";
+position:absolute;
+top:0;
+left:-120%;
+width:80%;
+height:100%;
+background:linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.32),
+transparent
+);
+transition:.65s;
+}
+
+/* hover */
+#bookNow:hover{
+transform:translateY(-3px) scale(1.03);
+box-shadow:
+0 20px 40px rgba(239,68,68,.42),
+0 0 24px rgba(239,68,68,.24);
+}
+
+/* quét sáng */
+#bookNow:hover::before{
+left:140%;
+}
+
+/* click */
+#bookNow:active{
+transform:scale(.96);
 }
 .card{padding:14px 16px;border-top:1px solid #f1f5f9}
 .pricebox{
@@ -54,7 +179,13 @@ margin:14px;background:#f8fafc;border-radius:16px;
 padding:14px;font-size:14px;line-height:2
 }
 .pricebox b{color:#14b8a6}
-.note{font-size:13px;color:#64748b;line-height:1.6;text-align:center}
+.note{
+font-size:13px;
+color:#64748b;
+font-weight:500;
+line-height:1.6;
+text-align:center
+}
 .suggest{
 background:#fff;border:1px solid #e5e7eb;border-radius:14px;
 margin-bottom:8px;overflow:hidden
@@ -314,7 +445,6 @@ scroll-margin-top:42px !important;
 <button id="btnLocate" style="background:#ecfeff">Vị trí tôi</button>
 <button id="btnPickA">📍 Ghim điểm đón</button>
 <button id="btnPickB">📌 Ghim điểm đến</button>
-<button id="btnRoute" style="background:#14b8a6;color:#fff">Tính cước phí</button>
 </div>
 </div>
 
@@ -332,24 +462,27 @@ scroll-margin-top:42px !important;
 </div>
 </div>
 
+
+
+<div class="pricebox">
+2km đầu : <b>30.000đ (Giá mở cửa)</b><br>
+2 → 19km : <b>10.000đ/km</b><br>
+20 → 50km : <b>9.000đ/km</b><br>
+51 → 100km : <b>8.000đ/km</b><br>
+101 → 150km : <b>7.000đ/km</b><br>
+Trên 150km : <b>6.000đ/km</b>
+</div>
+
+<div class="card note">
+* Giá cước chưa bao gồm phí cầu đường, bến bãi nếu có (Liên hệ trực tiếp 0829133391 để có giá tốt hơn)
+</div>
+
 <div class="card">
 <div style="font-weight:700;margin-bottom:8px">Nhập km thủ công</div>
 <div class="row">
 <input id="kmInput" type="number" placeholder="Ví dụ 15" style="margin:0;flex:1">
 <button id="btnKm" style="background:#16a34a;color:#fff;max-width:120px">Tính giá</button>
 </div>
-</div>
-
-<div class="pricebox">
-3.5km đầu : <b>30.000đ (Giá mở cửa)</b><br>
-3.5 → 19km : <b>9.000đ/km</b><br>
-20 → 50km : <b>8.000đ/km</b><br>
-50 → 100km : <b>7.000đ/km</b><br>
-Trên 100km : <b>6.000đ/km</b>
-</div>
-
-<div class="card note">
-* Chưa bao gồm phí cầu đường, bến bãi nếu có (Liên hệ trực tiếp 0829133391 để có giá tốt hơn)
 </div>
 
 </div>
@@ -375,11 +508,35 @@ let map=null,markerA=null,markerB=null;
 let pickupCoord=null,dropoffCoord=null,pickMode=null;
 
 function gia(k){
-if(k<=3.5)return 30000;
-if(k<=19)return 30000+(k-3.5)*9000;
-if(k<=50)return 169500+(k-19)*8000;
-if(k<=100)return 417500+(k-50)*7000;
-return 767500+(k-100)*6000;
+
+/* 2km đầu */
+if(k <= 2){
+return 30000;
+}
+
+/* 2 -> 19km */
+if(k <= 19){
+return 30000 + (k - 2) * 10000;
+}
+
+/* 20 -> 50km */
+if(k <= 50){
+return 200000 + (k - 19) * 9000;
+}
+
+/* 51 -> 100km */
+if(k <= 100){
+return 479000 + (k - 50) * 8000;
+}
+
+/* 101 -> 150km */
+if(k <= 150){
+return 879000 + (k - 100) * 7000;
+}
+
+/* trên 150km */
+return 1229000 + (k - 150) * 6000;
+
 }
 
 function showFare(km,t){
@@ -420,6 +577,11 @@ else el("dropoff").value=d.results[0].formatted_address;
 pickMode=null;
 el("btnPickA").classList.remove("modeOn");
 el("btnPickB").classList.remove("modeOn");
+
+/* tự tính khi đủ điểm */
+if(pickupCoord && dropoffCoord){
+calcRoute();
+}
 
 });
 }
@@ -476,6 +638,11 @@ el(box).innerHTML="";
 setMarker(type,x.geometry.location.lng,x.geometry.location.lat);
 
 map.flyTo({center:[x.geometry.location.lng,x.geometry.location.lat],zoom:15});
+
+/* tự tính khi đủ 2 điểm */
+if(pickupCoord && dropoffCoord){
+calcRoute();
+}
 
 }catch(err){}
 };
@@ -578,7 +745,6 @@ this.classList.add("modeOn");
 el("btnPickA").classList.remove("modeOn");
 };
 
-el("btnRoute").onclick=calcRoute;
 
 el("btnKm").onclick=function(){
 let km=parseFloat(el("kmInput").value);
